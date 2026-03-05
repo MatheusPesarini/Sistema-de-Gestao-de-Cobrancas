@@ -8,6 +8,65 @@ grails:
             # Whether to translate GORM events into Reactor events
             # Disabled by default for performance reasons
             events: false
+
+---
+# ===================== Spring Security =====================
+grails:
+    plugin:
+        springsecurity:
+            userLookup:
+                userDomainClassName: 'backend.User'
+                authorityJoinClassName: 'backend.UserRole'
+            authority:
+                className: 'backend.Role'
+            controllerAnnotations:
+                staticRules:
+                    - pattern: '/webhook/**'
+                      access: ['permitAll']
+                    - pattern: '/login/**'
+                      access: ['permitAll']
+                    - pattern: '/logout/**'
+                      access: ['permitAll']
+                    - pattern: '/logoff/**'
+                      access: ['permitAll']
+                    - pattern: '/assets/**'
+                      access: ['permitAll']
+                    - pattern: '/'
+                      access: ['isAuthenticated()']
+                    - pattern: '/dashboard/**'
+                      access: ['isAuthenticated()']
+                    - pattern: '/cliente/**'
+                      access: ['isAuthenticated()']
+                    - pattern: '/cobranca/**'
+                      access: ['isAuthenticated()']
+                    - pattern: '/**'
+                      access: ['isAuthenticated()']
+            filterChain:
+                chainMap:
+                    - pattern: '/assets/**'
+                      filters: 'none'
+                    - pattern: '/webhook/**'
+                      filters: 'none'
+                    - pattern: '/**/js/**'
+                      filters: 'none'
+                    - pattern: '/**/css/**'
+                      filters: 'none'
+                    - pattern: '/**/images/**'
+                      filters: 'none'
+                    - pattern: '/**/favicon.ico'
+                      filters: 'none'
+                    - pattern: '/**'
+                      filters: 'JOINED_FILTERS'
+            logout:
+                postOnly: false
+            auth:
+                loginFormUrl: '/login/auth'
+            adh:
+                errorPage: '/login/denied'
+            failureHandler:
+                defaultFailureUrl: '/login/authfail'
+            successHandler:
+                defaultTargetUrl: '/dashboard/index'
 info:
     app:
         name: '@info.app.name@'
@@ -99,6 +158,7 @@ grails:
 
 ---
 hibernate:
+    dialect: org.hibernate.dialect.H2Dialect
     cache:
         queries: false
         use_second_level_cache: false

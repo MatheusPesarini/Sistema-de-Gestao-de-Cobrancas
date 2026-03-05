@@ -31,6 +31,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.apache.grails:grails-spring-security:7.0.1'
     console "org.apache.grails:grails-console"
     developmentOnly "org.springframework.boot:spring-boot-devtools"
     implementation platform("org.apache.grails:grails-bom:$grailsVersion")
